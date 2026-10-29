@@ -19,13 +19,16 @@
 
 	<!-- tener en cuenta-->
   <!-- L10: TODO 4: Add paremeters to the <player> section: texture path, animations tsx path, movement speed, frame width/height -->
+	
+	
+	<!-- Cambiar animaciones, importante !!!!     -->
   <entitymanager>
     <player>
-	  <texture path="Assets/Textures/player2_spritesheet.png"/>
-	  <animations tsx="Assets/Textures/Spritesheet.tsx"/>
+	  <texture path="Assets/sprites/knight.png"/>
+	  <animations tsx="Assets/sprites/caballero.tsx"/>
 	  <movement speed="4.0"/>
-	  <frame width="32" height="32"/>
-	  <audiofx path="Assets/Audio/Fx/coin-collision-sound-342335.wav"/>
+	  <frame width="40" height="43"/>
+	  <audiofx path="Assets/Audio/Fx/coin-collision-sound-34    2335.wav"/>
     </player>		
   </entitymanager>
 

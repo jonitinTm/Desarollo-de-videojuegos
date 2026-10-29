@@ -45,4 +45,13 @@ private:
 	// L10: TODO 5: Player's animation clips, loaded from a TSX in Start()
 	// ..
 	AnimationSet anims;
+
+
+	// N variables para el funcionamento del roll
+		// Roll
+	bool rolling = false;
+	float rollTimer = 0.0f;
+	float rollDuration = 0.5f;   // segundos que dura el roll
+	float rollSpeed = 12.0f;     // más alto = recorre más distancia
+	int facing = 1;
 };

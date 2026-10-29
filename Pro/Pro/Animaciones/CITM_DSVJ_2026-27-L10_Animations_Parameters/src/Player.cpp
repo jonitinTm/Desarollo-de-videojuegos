@@ -39,7 +39,7 @@ bool Player::Start()
 	// L10: TODO 5: Load this entity's animations from a TSX and set the current animation to "idle".
 	// ...
 	
-		anims.LoadFromTSX(parameters.child("animations").attribute("tsx").as_string(), { {0, "idle"}, {11, "move"}, {22, "jump"} } );
+	anims.LoadFromTSX(parameters.child("animations").attribute("tsx").as_string(), { {0, "idle"}, {16, "run"}, {40, "roll"}, {48, "hit"}, {56, "death"} });
 		anims.SetCurrent("idle");
 	// Initialize audio effect
 	pickCoinFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/coin-collision-sound-342335.wav");
@@ -63,28 +63,74 @@ bool Player::Update(float dt)
 	velocity = Engine::GetInstance().physics->GetLinearVelocity(pbody);
 	velocity = { 0, velocity.y }; // Reset horizontal velocity by default, this way the player stops when no key is pressed
 
+
+	//N Creamos variable de animacion jugador
+	std::string anim = "idle";
+
+
 	// L10: TODO 7: Default to the "idle" animation; a key below overrides it
 	// ..
-	anims.SetCurrent("idle");
+
 	// Move left/right
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		velocity.x = -speed;
-		// L10: TODO 7: Switch to the "move" animation
-		// ..
-		anims.SetCurrent("move");
-	}
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		velocity.x = speed;
-		// L10: TODO 7: Switch to the "move" animation
-		// ..
-		anims.SetCurrent("move");
+
+
+	if (!rolling)
+	{
+
+
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			velocity.x = -speed;
+			// L10: TODO 7: Switch to the "move" animation
+			// ..
+			anim = "run";
+			facing = -1;
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			velocity.x = speed;
+			// L10: TODO 7: Switch to the "move" animation
+			// ..
+			anim = "run";
+			facing = 1;
+		}
+
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+			velocity.y = -speed;
+			// L10: TODO 7: Switch to the "move" animation
+			// ..
+
+		}
+
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
+
+			rolling = true;
+			rollTimer = rollDuration;
+		}
+
 	}
 
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		velocity.y = -speed;
-		// L10: TODO 7: Switch to the "move" animation
-		// ..
+	if (rolling)
+	{
+
+		velocity.x = rollSpeed * facing;
+		anim = "roll";
+
+		rollTimer -= dt;
+
+		if (rollTimer <= 0)
+		{
+			rolling = false;
+		}
+
+
+
 	}
+
+
+
+
+	anims.SetCurrent(anim);
+	//N actualizacion por segundo
+	anims.Update(dt);
 
 	// Apply velocity via helper
 	Engine::GetInstance().physics->SetLinearVelocity(pbody, velocity);
