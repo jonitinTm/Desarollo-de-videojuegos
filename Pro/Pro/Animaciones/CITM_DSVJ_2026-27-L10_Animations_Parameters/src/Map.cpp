@@ -181,6 +181,30 @@ bool Map::Load(std::string path, std::string fileName)
 																							bodyType::STATIC);
 							body->ctype = ColliderType::PLATFORM;
 						}
+
+
+						//N Deteccion de la colision con la muerte
+						else if (gid != 0 && gid == deathGid)// si es de tipo deathGid
+						{
+							Vector2D mapCoord = MapToWorld(i, j);//Guardamos las cordenadas en pixeles, ya que MapToWorld convierte 
+							PhysBody* body = Engine::GetInstance().physics->CreateRectangleSensor(
+								(int)mapCoord.getX() + mapData.tileWidth / 2,
+								(int)mapCoord.getY() + mapData.tileHeight / 2,
+								mapData.tileWidth,
+								mapData.tileHeight,
+								bodyType::STATIC);
+							/*
+							
+							Con el Engine::Getinstance().physics->... Entramos al modulo de fisicas,
+							Creanmos un sensor, el cual cuando algo colisione ahí, pasara algo, se hace con CreateRectangleSensor, nos devuelve un puntero
+							Ahora, lo llenamos con los parametros que nos pide, Son 5. la posicion de dibujado, el calculo que hay, es porque partimos de la esquina y entonces al sumarle y dividir, obtenemos el medio
+							lo hacemos con la x e y, 
+							Luego le pasamos el ancho y alto
+							Definirlo como estatico
+							
+							*/
+							body->ctype = ColliderType::DEATH;// creamos una etiqueta, qu se leera en, Player::Oncolision, para que se active el el case
+						}
 					}
 				}
 			}

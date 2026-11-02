@@ -41,9 +41,17 @@ bool Player::Start()
 	
 	anims.LoadFromTSX(parameters.child("animations").attribute("tsx").as_string(), { {0, "idle"}, {16, "run"}, {40, "roll"}, {48, "hit"}, {56, "death"} });
 		anims.SetCurrent("idle");
-	// Initialize audio effect
+
+
+	// N Añadir efectos de audio
+
+
 	pickCoinFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/coin-collision-sound-342335.wav");
 
+	hurtFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/off.wav");
+
+
+	//--------------->
 	// L08: TODO 5: Add physics to the player - create the physics body: a CAPSULE (CreateCapsule) with fixed rotation, so the player does not roll
 	pbody = Engine::GetInstance().physics->CreateCircle((int)position.getX() + texW / 2, (int)position.getY() + texH / 2, texW / 2, bodyType::DYNAMIC);
 
@@ -73,7 +81,7 @@ bool Player::Update(float dt)
 
 	// Move left/right
 
-
+	// N mecanica de rodamiento
 	if (!rolling)
 	{
 
@@ -124,6 +132,40 @@ bool Player::Update(float dt)
 
 
 	}
+
+
+
+
+	//  N  Mecanicas de vidas
+
+
+	if (invulnerable)
+	{
+		invulTimer -= dt;
+
+		if (invulTimer <= 0) invulnerable = false;
+
+	}
+
+	if (hitTimer > 0) hitTimer -= dt;
+	if (hitTimer > 0) anim = "hit";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -202,6 +244,34 @@ bool Player::CleanUp()
 	return true;
 }
 
+
+
+// N Crear la funcion de la muerte------->
+
+
+void Player:: TakeDamage()
+{
+
+	if (invulnerable) return;// si esta invulnerable mo pasa nada
+
+	lives--; //Quitamos una vida
+	invulnerable = true; // tiempo que es invulnerable
+
+	invulTimer = invulDuration;
+
+	hitTimer = 0.4f; //Animacion de hit
+
+
+	Engine::GetInstance().audio->PlayFx(hurtFxId);
+	LOG("Jugador herido, tiene: %d", lives);
+}
+
+
+
+
+
+
+
 // L08: TODO 6: Define OnCollision function for the player.
 void Player::OnCollision(PhysBody* physA, PhysBody* physB)
 {
@@ -223,6 +293,16 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB)
 		LOG("Collision ITEM");
 
 		break;
+
+
+		//N La etiqueta llama, y todo el mundo obedece
+		case ColliderType:: DEATH:
+
+			TakeDamage();
+
+		break;
+
+
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

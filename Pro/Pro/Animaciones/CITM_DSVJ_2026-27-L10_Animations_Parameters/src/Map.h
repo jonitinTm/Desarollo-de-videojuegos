@@ -139,4 +139,8 @@ private:
 
 	// L09: TODO 8: Create colliders from map metadata
 	int colliderGid = 49; // The gid of the tile that represents a collider in the tileset
+
+
+	//N cogemos el gid de nuestra nueva colision, en este cso el Gid verde para detectar la colision de muerte, obviamente marcando donde se encuentar
+	int deathGid = 50;
 };
