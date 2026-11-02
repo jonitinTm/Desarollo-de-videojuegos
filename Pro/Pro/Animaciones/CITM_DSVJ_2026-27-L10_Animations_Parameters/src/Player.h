@@ -34,6 +34,15 @@ public:
 	SDL_Texture* texture;
 	int texW, texH;
 
+
+
+	//N Vidas, porque todo el mundo lo puede modificar
+	int lives = 3;
+
+
+
+
+
 	// L08: TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody = nullptr;
 
@@ -54,4 +63,24 @@ private:
 	float rollDuration = 0.5f;   // segundos que dura el roll
 	float rollSpeed = 12.0f;     // más alto = recorre más distancia
 	int facing = 1;
+
+
+	//N variables para controlar la muerte
+
+	bool invulnerable = false;
+	float invulTimer = 0.0f;
+	float invulDuration = 1.5f;
+	float hitTimer = 0.0f;
+	int hurtFxId;
+
+	void TakeDamage();
+
+
+	//N control de daño
+	bool gameOver = false;
+
+	Vector2D spawnPoint;
+	void Restart();
+	void Respawn();
+
 };

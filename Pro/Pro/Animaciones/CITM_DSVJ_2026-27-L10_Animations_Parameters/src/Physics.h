@@ -24,12 +24,16 @@ enum class bodyType {
 	KINEMATIC
 };
 
+
+//N aqui definimos todas las colisiones y vamos añadiendo segun las nuevas colisiones que vallamos creando ex: Death
 enum class ColliderType {
 	PLAYER,
 	ITEM,
 	PLATFORM,
 	ENEMY,
+	DEATH,
 	UNKNOWN
+
 	// ..
 };
 
