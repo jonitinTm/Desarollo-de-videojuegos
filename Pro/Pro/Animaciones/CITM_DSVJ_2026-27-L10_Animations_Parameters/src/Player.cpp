@@ -16,10 +16,15 @@ Player::Player() : Entity(EntityType::PLAYER)
 Player::~Player()
 {}
 
+
+
+//N
 bool Player::Awake()
 {
 	// L04: TODO 2: Initialize the player's position
-	position = Vector2D(300.0f, 300.0f);
+	position = Vector2D(150.0f, 1625.0f);
+	spawnPoint = position;
+
 	return true;
 }
 
@@ -206,6 +211,23 @@ bool Player::Update(float dt)
 
 	return true;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 bool Player::Draw()
 {

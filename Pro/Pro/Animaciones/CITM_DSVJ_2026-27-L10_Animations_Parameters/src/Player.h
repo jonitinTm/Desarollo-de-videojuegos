@@ -75,4 +75,12 @@ private:
 
 	void TakeDamage();
 
+
+	//N control de daño
+	bool gameOver = false;
+
+	Vector2D spawnPoint;
+	void Restart();
+	void Respawn();
+
 };
