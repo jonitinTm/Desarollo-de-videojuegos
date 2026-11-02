@@ -1,0 +1,7 @@
+- Enemigos
+- Invertir animaciones
+- Menú
+- Poner sonidos
+- Puntos de spawn
+- Solucionar bug daño continuo
+- 
