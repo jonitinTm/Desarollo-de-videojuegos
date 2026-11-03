@@ -8,6 +8,21 @@
 #include "Audio.h"
 #include "Map.h"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
@@ -18,7 +33,7 @@ Player::~Player()
 
 
 
-//N
+//N Inicializamos el lugar de res
 bool Player::Awake()
 {
 	// L04: TODO 2: Initialize the player's position
@@ -39,7 +54,7 @@ bool Player::Start()
 
 	texW = parameters.child("frame").attribute("width").as_int();
 	texH = parameters.child("frame").attribute("height").as_int();
-
+	jumpSpeed = parameters.child("movement").attribute("jump").as_float();
 
 	// L10: TODO 5: Load this entity's animations from a TSX and set the current animation to "idle".
 	// ...
@@ -67,6 +82,8 @@ bool Player::Start()
 	pbody->ctype = ColliderType::PLAYER;
 
 	return true;
+
+
 }
 
 bool Player::Update(float dt)
@@ -81,61 +98,37 @@ bool Player::Update(float dt)
 	std::string anim = "idle";
 
 
+	// N Reiniciar si se le da al enter
+	if (gameOver && Engine::GetInstance().input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		Restart();
+
+
+	//n -------------------------------<<<> mirar
+
+	if (jumpLock > 0.0f) jumpLock -= dt;   // el bloqueo se va gastando
+
+	// Solo "pisamos suelo" si el bloqueo ha terminado Y casi no hay velocidad vertical
+	if (jumpLock <= 0.0f && velocity.y > -0.3f && velocity.y < 0.3f)
+		groundTimer = groundGrace;
+	else
+		groundTimer -= dt;
 	// L10: TODO 7: Default to the "idle" animation; a key below overrides it
 	// ..
 
 	// Move left/right
 
 	// N mecanica de rodamiento
-	if (!rolling)
+	if (!gameOver)
 	{
-
-
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -speed;
-			// L10: TODO 7: Switch to the "move" animation
-			// ..
-			anim = "run";
-			facing = -1;
-		}
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = speed;
-			// L10: TODO 7: Switch to the "move" animation
-			// ..
-			anim = "run";
-			facing = 1;
-		}
-
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-			velocity.y = -speed;
-			// L10: TODO 7: Switch to the "move" animation
-			// ..
-
-		}
-
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
-
-			rolling = true;
-			rollTimer = rollDuration;
-		}
-
-	}
-
-	if (rolling)
-	{
-
-		velocity.x = rollSpeed * facing;
-		anim = "roll";
-
-		rollTimer -= dt;
-
-		if (rollTimer <= 0)
+		if (!rolling)
 		{
-			rolling = false;
+
+			Move(anim);
+			Jump();
+
 		}
-
-
-
+		Roll(dt, anim);
+		
 	}
 
 
@@ -154,7 +147,8 @@ bool Player::Update(float dt)
 
 	if (hitTimer > 0) hitTimer -= dt;
 	if (hitTimer > 0) anim = "hit";
-
+	//Aqui hacemos lo del parpadeo, mientras este en el estado de inmune durante los numeros pares
+	if (invulnerable && (int)(invulTimer * 10) % 2 == 0)anim = "hit";
 
 
 
@@ -213,9 +207,51 @@ bool Player::Update(float dt)
 }
 
 
+void Player::Move(std::string& anim)
+{
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		velocity.x = -speed;
+		anim = "run";
+		facing = -1;
+	}
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		velocity.x = speed;
+		anim = "run";
+		facing = 1;
+	}
+}
 
 
+void Player::Jump()
+{
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && IsOnGround())
+	{
+		velocity.y = -jumpSpeed;
+		groundTimer = 0.0f;
+		jumpLock = (jumpSpeed / -GRAVITY_Y) * 1.3f;
+	}
 
+
+}
+
+
+void Player::Roll(float dt, std::string& anim)
+{
+	// El roll pasa a LSHIFT, porque SPACE ya es el salto
+	if (!rolling && Engine::GetInstance().input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
+	{
+		rolling = true;
+		rollTimer = rollDuration;
+	}
+
+	if (rolling)
+	{
+		velocity.x = rollSpeed * facing;
+		anim = "roll";
+		rollTimer -= dt;
+		if (rollTimer <= 0) rolling = false;
+	}
+}
 
 
 
@@ -274,7 +310,7 @@ bool Player::CleanUp()
 void Player:: TakeDamage()
 {
 
-	if (invulnerable) return;// si esta invulnerable mo pasa nada
+	if (invulnerable || gameOver) return;// si esta invulnerable mo pasa nada
 
 	lives--; //Quitamos una vida
 	invulnerable = true; // tiempo que es invulnerable
@@ -286,8 +322,56 @@ void Player:: TakeDamage()
 
 	Engine::GetInstance().audio->PlayFx(hurtFxId);
 	LOG("Jugador herido, tiene: %d", lives);
+
+
+
+	if (lives <= 0)
+	{
+
+		lives = 0;
+		gameOver = true;
+		Respawn();
+		LOG("GAME_OVER");
+	}
+
+
+
+
+
 }
 
+
+
+
+//------------------------> N vamos a definir las funciones de Respawn y Restart
+
+
+
+void Player::Respawn()
+{
+	//seteamos al jugador en la mitad de la Tile
+	pbody->SetPosition((int)spawnPoint.getX() + texW / 2, (int)spawnPoint.getY() + texH / 2);
+
+	//Le quitamos cualquier tipo de velocidad que pueda tener, poniendola a 0
+	Engine::GetInstance().physics->SetLinearVelocity(pbody, 0.0f, 0.0f);
+
+	//Quitamos el rolling en caso de que muera con el
+
+	rolling = false;
+
+}
+
+
+
+
+void Player::Restart()
+{
+	lives = 3;
+	gameOver = false;
+	invulnerable = false;
+	Respawn();
+
+}
 
 
 
@@ -302,8 +386,19 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PLATFORM:
+	{
+		//N Hacemos que detecte lo que este debajo del jugador
+		int px, py, bx, by;
+
+		physA->GetPosition(px, py);
+		physB->GetPosition(bx, by);
+
+		if (by - py > texW / 2 + 8)
+			groundBodies.insert(physB);
+
 		LOG("Collision PLATFORM");
 		break;
+	}
 	case ColliderType::ITEM:
 		
 		//Play the coin pickup sound effect 
@@ -331,4 +426,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB)
 	default:
 		break;
 	}
+
+}
+
+
+//borramos los elementos de la lista
+void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
+
+{
+	groundBodies.erase(physB);
+
+
 }

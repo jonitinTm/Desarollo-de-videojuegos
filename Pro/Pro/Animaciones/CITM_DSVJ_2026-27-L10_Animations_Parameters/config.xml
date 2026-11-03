@@ -26,9 +26,15 @@
     <player>
 	  <texture path="Assets/sprites/knight.png"/>
 	  <animations tsx="Assets/sprites/caballero.tsx"/>
-	  <movement speed="4.0"/>
+		<!-- Añadimos una variable salto -->
+	  <movement speed="4.0" jump ="6.5"/>
+		
+
+
+		
 	  <frame width="40" height="43"/>
 	  <audiofx path="Assets/Audio/Fx/coin-collision-sound-34    2335.wav"/>
+		
     </player>		
   </entitymanager>
 

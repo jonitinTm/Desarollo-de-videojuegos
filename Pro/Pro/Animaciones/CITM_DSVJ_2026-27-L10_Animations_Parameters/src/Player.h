@@ -3,6 +3,11 @@
 #include "Entity.h"
 #include <SDL3/SDL.h>
 #include <box2d/box2d.h>
+
+#include <string>
+#include <set>
+
+
 #include "Animation.h"
 struct SDL_Texture;
 
@@ -24,8 +29,13 @@ public:
 
 	bool CleanUp();
 
+
+
+	//N Basicamente es para detectar si esta colisionando con algo el jugador
 	// L08: TODO 6: Define OnCollision function for the player.
 	void OnCollision(PhysBody* physA, PhysBody* physB);
+	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
+	float jumpSpeed = 6.5f;
 
 public:
 
@@ -36,8 +46,16 @@ public:
 
 
 
+
+
+
+
+
 	//N Vidas, porque todo el mundo lo puede modificar
 	int lives = 3;
+
+	//N control de daño
+	bool gameOver = false;
 
 
 
@@ -77,10 +95,31 @@ private:
 
 
 	//N control de daño
-	bool gameOver = false;
+
 
 	Vector2D spawnPoint;
 	void Restart();
 	void Respawn();
 
+
+
+	//Declaramos los movimientos del jugador
+	void Move(std::string& anim);
+
+	void Jump();
+
+	void Roll(float dt, std::string& anim);
+
+	//Detección de si hay suelo
+
+	std::set<PhysBody*>groundBodies;//creamos un set donde pondremos los valores del suelo, para saber si lo estamos pisando
+
+	bool IsOnGround() const
+	{
+		return groundTimer > 0.0f;
+	}
+	//Variable, para no bugear salto
+	float groundTimer = 0.0f;     
+	float groundGrace = 0.1f;     
+	float jumpLock = 0.0f;
 };

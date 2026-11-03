@@ -86,7 +86,91 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
+
 	bool ret = true;
+// ---------------------------------> N Dibujamos por pantalla
+
+	// Si estamos en la pantalla de game over
+
+	if (player->gameOver)
+	{
+
+
+		//Para que nos entendamos aqui, lo que se va hacer es una especie de colaix, pegando cosas
+		//desde el fondo hacia delante
+
+
+
+
+		//Por asi decirlo, le assignamos a una variable el poder de poder dibujar, sobre ella
+
+		SDL_Renderer* r = Engine::GetInstance().render->renderer;
+
+
+		//Hacemos la primera capa, le assignamos una capa transparente
+
+		SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
+
+		//Definimos el rectangulo, que se mostrara en la pantalla
+
+		SDL_Rect screen = { 0, 0, 1280, 720 };
+
+		//Ahora cogemos el rectangulo y lo dibujamos
+		//180 = opacidad, true relleno, si fuera false, solo se dibujaria el borde. false, para que se quede estatico
+		Engine::GetInstance().render->DrawRectangle(screen, 0, 0, 0, 180, true, false);
+
+
+		//Definimos la escala de como queremos que se vean las cosas
+		SDL_SetRenderScale(r, 4.0f, 4.0f);
+
+		//Definimos El color de la letra que usaremos para dibujar
+		SDL_SetRenderDrawColor(r, 255, 60, 60, 255);
+
+		//Creamos el texto que queremos que se muestre en pantall
+		//Le pasamos una posicion
+		SDL_RenderDebugText(r, 124.0f, 70.0f, "GAME OVER");
+
+
+
+		//Ahora pasamos a crear el otro texto que se dibuja abajo
+
+
+
+		SDL_SetRenderScale(r, 2.0f, 2.0f);
+		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+		SDL_RenderDebugText(r, 240.0f, 200.0f, "Press ENTER to retry");
+
+		//Siempre que acabemos, volver a la escala normal
+
+
+		SDL_SetRenderScale(r, 1.0f, 1.0f);
+
+
+
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//-----------
+
+
+
+
+
+
+
+
 
 	if(Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
