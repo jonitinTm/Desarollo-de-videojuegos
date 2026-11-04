@@ -26,12 +26,14 @@ enum class bodyType {
 
 
 //N aqui definimos todas las colisiones y vamos añadiendo segun las nuevas colisiones que vallamos creando ex: Death
+//Recordar que esto existe y que cada vez que lo quiera modificar tengo que añadir una nueva colision al enum
 enum class ColliderType {
 	PLAYER,
 	ITEM,
 	PLATFORM,
 	ENEMY,
 	DEATH,
+	PIT,
 	UNKNOWN
 
 	// ..

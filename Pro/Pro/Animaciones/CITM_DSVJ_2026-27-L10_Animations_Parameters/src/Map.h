@@ -143,4 +143,10 @@ private:
 
 	//N cogemos el gid de nuestra nueva colision, en este cso el Gid verde para detectar la colision de muerte, obviamente marcando donde se encuentar
 	int deathGid = 50;
+
+
+
+	//Pillamos el gid de la colision
+
+	int pitGid = 356;
 };

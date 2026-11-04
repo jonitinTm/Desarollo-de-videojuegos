@@ -205,6 +205,29 @@ bool Map::Load(std::string path, std::string fileName)
 							*/
 							body->ctype = ColliderType::DEATH;// creamos una etiqueta, qu se leera en, Player::Oncolision, para que se active el el case
 						}
+
+
+						// Añadimos otro exactamente igual, pero con nuestros nuevos parametros, parque que lo lea y detecte
+
+						else if (gid != 0 && gid == pitGid)
+						{
+							Vector2D mapCoord = MapToWorld(i, j);
+							PhysBody* body = Engine::GetInstance().physics->CreateRectangleSensor(
+								(int)mapCoord.getX() + mapData.tileWidth / 2,
+								(int)mapCoord.getY() + mapData.tileHeight / 2,
+								mapData.tileWidth,
+								mapData.tileHeight,
+								bodyType::STATIC);
+							body->ctype = ColliderType::PIT;
+						}
+
+
+
+
+
+
+
+
 					}
 				}
 			}

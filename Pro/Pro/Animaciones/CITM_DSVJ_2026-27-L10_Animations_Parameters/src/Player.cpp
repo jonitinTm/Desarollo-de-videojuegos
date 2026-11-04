@@ -96,7 +96,7 @@ bool Player::Update(float dt)
 
 	//N Creamos variable de animacion jugador
 	std::string anim = "idle";
-
+	//N definimos en falso
 
 	// N Reiniciar si se le da al enter
 	if (gameOver && Engine::GetInstance().input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
@@ -118,7 +118,20 @@ bool Player::Update(float dt)
 	// Move left/right
 
 	// N mecanica de rodamiento
-	if (!gameOver)
+
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+		PoderGod();
+
+
+
+
+	if (godMode)
+	{
+		Fly(anim);
+	}
+
+
+	else if (!gameOver&& !dying)
 	{
 		if (!rolling)
 		{
@@ -158,7 +171,19 @@ bool Player::Update(float dt)
 
 
 
+	if (dying)
+	{
+		anim = "death";
+		velocity = { 0.0f, 0.0f };      // quieto mientras muere
+		deathTimer -= dt;
 
+		if (deathTimer <= 0.0f)
+		{
+			dying = false;
+			if (lives <= 0) gameOver = true;   // el Game Over sale DESPUÉS de la animación
+			Respawn();
+		}
+	}
 
 
 
@@ -205,6 +230,43 @@ bool Player::Update(float dt)
 
 	return true;
 }
+
+
+
+
+void Player::PoderGod()
+{
+
+
+
+	godMode = !godMode;
+	b2Body_SetGravityScale(pbody->body, godMode ? 0.0f : 1.0f);
+
+	if (godMode)
+	{
+		dying = false;
+		rolling = false;
+		invulnerable = false;
+	}
+	LOG("God mode: %s", godMode ? "ON" : "OFF");
+
+
+}
+
+
+
+void Player::Fly(std::string& anim)
+{
+	float flySpeed = speed * 2.0f;     // Para ir mas rapido
+	velocity = { 0.0f, 0.0f };         // Para quedarte estatico en el aire
+
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) { velocity.x = -flySpeed; facing = -1; anim = "run"; }
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) { velocity.x = flySpeed; facing = 1; anim = "run"; }
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) { velocity.y = -flySpeed; anim = "run"; }
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) { velocity.y = flySpeed; anim = "run"; }
+}
+
+
 
 
 void Player::Move(std::string& anim)
@@ -273,8 +335,8 @@ bool Player::Draw()
 	// L10: TODO 6: Draw the current animation frame instead of the whole spritesheet
 	// ..
 	SDL_Rect currentFrame = anims.GetCurrentFrame();
-
-
+	//Para que haga un parpadeo en los jnumeros pares
+	if (invulnerable && ((int)(invulTimer * 10) % 2 == 0)) return true;
 
 
 
@@ -310,7 +372,7 @@ bool Player::CleanUp()
 void Player:: TakeDamage()
 {
 
-	if (invulnerable || gameOver) return;// si esta invulnerable mo pasa nada
+	if (godMode||invulnerable || gameOver||dying) return;// si esta invulnerable mo pasa nada
 
 	lives--; //Quitamos una vida
 	invulnerable = true; // tiempo que es invulnerable
@@ -329,16 +391,47 @@ void Player:: TakeDamage()
 	{
 
 		lives = 0;
-		gameOver = true;
-		Respawn();
-		LOG("GAME_OVER");
+		Die();
 	}
 
 
-
-
-
 }
+
+
+//----> definimos la muerte del player
+
+
+
+void Player::Kill()
+{
+	if (godMode||gameOver || dying) return;
+
+
+	lives--;
+	Engine::GetInstance().audio->PlayFx(hurtFxId);
+	LOG("Player killed by pit. Lives left: %d", lives);
+
+
+	if (lives <= 0)
+	{
+		lives = 0;
+	}
+
+	Die();
+}
+
+
+void Player::Die()
+{
+	if (dying)return;
+
+	dying = true;
+	deathTimer = 1.4f;
+	rolling = false;
+	hitTimer = 0.0f;
+}
+
+
 
 
 
@@ -349,6 +442,10 @@ void Player:: TakeDamage()
 
 void Player::Respawn()
 {
+
+
+
+	
 	//seteamos al jugador en la mitad de la Tile
 	pbody->SetPosition((int)spawnPoint.getX() + texW / 2, (int)spawnPoint.getY() + texH / 2);
 
@@ -418,6 +515,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB)
 			TakeDamage();
 
 		break;
+
+		//N La etiqueta llama, y todo el mundo obedece
+		case ColliderType::PIT:
+
+			Kill();
+
+			break;
 
 
 	case ColliderType::UNKNOWN:

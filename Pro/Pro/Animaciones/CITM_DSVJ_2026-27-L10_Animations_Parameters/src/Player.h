@@ -54,6 +54,17 @@ public:
 	//N Vidas, porque todo el mundo lo puede modificar
 	int lives = 3;
 
+
+	//N activacion del good mode
+	bool godMode = false;
+	void PoderGod();
+	void Fly(std::string& anim);
+
+
+
+
+
+
 	//N control de daño
 	bool gameOver = false;
 
@@ -82,12 +93,23 @@ private:
 	float rollSpeed = 12.0f;     // más alto = recorre más distancia
 	int facing = 1;
 
+	//N creacion de las funciones para la muerte instanteanea
+	void Kill();
+	bool dying = false;
+	float deathTimer = 0.0f;
+	void Die();
+
+
+
+
+
+
 
 	//N variables para controlar la muerte
 
 	bool invulnerable = false;
 	float invulTimer = 0.0f;
-	float invulDuration = 1.5f;
+	float invulDuration = 0.5f;
 	float hitTimer = 0.0f;
 	int hurtFxId;
 

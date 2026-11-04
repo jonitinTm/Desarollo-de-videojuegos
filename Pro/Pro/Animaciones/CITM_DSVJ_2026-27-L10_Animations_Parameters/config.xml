@@ -27,7 +27,7 @@
 	  <texture path="Assets/sprites/knight.png"/>
 	  <animations tsx="Assets/sprites/caballero.tsx"/>
 		<!-- Añadimos una variable salto -->
-	  <movement speed="4.0" jump ="6.5"/>
+	  <movement speed="4.0" jump ="5"/>
 		
 
 

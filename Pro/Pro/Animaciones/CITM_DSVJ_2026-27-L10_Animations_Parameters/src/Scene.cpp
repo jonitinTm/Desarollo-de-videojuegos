@@ -151,6 +151,17 @@ bool Scene::PostUpdate()
 	}
 
 
+	if (player->godMode)
+	{
+		SDL_Renderer* r = Engine::GetInstance().render->renderer;
+		SDL_SetRenderScale(r, 2.0f, 2.0f);
+		SDL_SetRenderDrawColor(r, 255, 255, 0, 255);
+		SDL_RenderDebugText(r, 5.0f, 5.0f, "GOD MODE (F10)");
+		//vuelta escala normal
+		SDL_SetRenderScale(r, 1.0f, 1.0f);    
+	}
+
+
 
 
 
