@@ -132,6 +132,11 @@ private:
 	// Target frame rate, in frames per second.
 	float targetFrameRate = 60;
 
+
+	//variables del config.xml
+	float configFrameRate = 60;
+	bool frameCap30 = false;
+
 	std::string gameTitle = "Platformer Game";
 
 	// L05: TODO 2: Declare a pugi::xml_document member to hold config.xml

@@ -138,6 +138,29 @@ bool Map::Load(std::string path, std::string fileName)
 			mapData.tilesets.push_back(tileSet);
 		}
 
+
+
+
+
+		//Spawn
+		hasSpawn = false;
+		for (pugi::xml_node og = mapNode.child("objectgroup"); og; og = og.next_sibling("objectgroup"))
+		{
+			if (std::string(og.attribute("name").as_string()) != "Spawn") continue;
+			pugi::xml_node obj = og.child("object");
+			if (obj)
+			{
+				spawnPoint = Vector2D(obj.attribute("x").as_float(), obj.attribute("y").as_float());
+				hasSpawn = true;
+			}
+		}
+
+
+
+
+
+
+
 		// L07: TODO 3: Load every <layer>
 		for (pugi::xml_node layerNode = mapNode.child("layer"); layerNode; layerNode = layerNode.next_sibling("layer"))
 		{

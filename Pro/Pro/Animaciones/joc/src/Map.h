@@ -5,6 +5,7 @@
 #include <SDL3/SDL_rect.h>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 struct SDL_Texture;
 
@@ -127,12 +128,30 @@ public:
 	// tiles times tile size) -- used to clamp the camera to the map's edges
 	Vector2D GetMapSizeInPixels();
 
+
+
+	//N funciones para el spawn
+
+	bool HasSpawnPoint() const { return hasSpawn; }
+	Vector2D GetSpawnPoint() const { return spawnPoint; }
+
+
+
+
 public:
 	std::string mapFileName;
 	std::string mapPath;
 
 private:
 	bool mapLoaded;
+	//variables para el spawn
+	Vector2D spawnPoint;
+	bool hasSpawn = false;
+
+
+
+
+
 
 	// L06: TODO 1: Declare a MapData member to hold the parsed map
 	MapData mapData;

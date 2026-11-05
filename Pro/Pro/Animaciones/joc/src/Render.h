@@ -39,6 +39,9 @@ public:
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 
+	//Booleana que se usara para el menu de capar fps
+	bool IsVsyncEnabled()const { return vsync; }
+
 public:
 
 	SDL_Renderer* renderer;

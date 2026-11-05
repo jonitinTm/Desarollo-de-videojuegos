@@ -66,9 +66,8 @@ bool Player::Start()
 	// N Añadir efectos de audio
 
 
-	pickCoinFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/coin-collision-sound-342335.wav");
-
-	hurtFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/off.wav");
+		pickCoinFxId = Engine::GetInstance().audio->LoadFx(parameters.child("audiofx").attribute("path").as_string());
+		hurtFxId = Engine::GetInstance().audio->LoadFx(parameters.child("hurtfx").attribute("path").as_string());
 
 
 	//--------------->

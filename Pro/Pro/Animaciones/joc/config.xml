@@ -33,8 +33,9 @@
 
 		
 	  <frame width="40" height="43"/>
-	  <audiofx path="Assets/Audio/Fx/coin-collision-sound-34    2335.wav"/>
-		
+		<!--Audios-->
+	  <audiofx path="Assets/Audio/Fx/coin-collision-sound-342335.wav"/>
+	<hurtfx path="Assets/Audio/Fx/off.wav"/>
     </player>		
   </entitymanager>
 
