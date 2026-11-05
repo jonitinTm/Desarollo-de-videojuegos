@@ -173,6 +173,7 @@ bool Scene::PostUpdate()
 		SDL_RenderDebugText(r, 15.0f, 60.0f, "F10 God mode");
 		SDL_RenderDebugText(r, 15.0f, 70.0f, "F11 30 fps cap");
 		SDL_RenderDebugText(r, 15.0f, 80.0f, "F8  Vsync on/off");
+		SDL_RenderDebugText(r, 15.0f, 90.0f, "Shift	Roll");
 		SDL_SetRenderScale(r, 1.0f, 1.0f);
 	}
 
