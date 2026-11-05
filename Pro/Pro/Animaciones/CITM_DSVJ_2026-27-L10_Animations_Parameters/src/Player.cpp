@@ -59,7 +59,7 @@ bool Player::Start()
 	// L10: TODO 5: Load this entity's animations from a TSX and set the current animation to "idle".
 	// ...
 	
-	anims.LoadFromTSX(parameters.child("animations").attribute("tsx").as_string(), { {0, "idle"}, {16, "run"}, {40, "roll"}, {48, "hit"}, {56, "death"} });
+	anims.LoadFromTSX(parameters.child("animations").attribute("tsx").as_string(), { {0, "idle"}, {16, "run"}, {40, "roll"}, {48, "hit"}, {56, "death"}, {20, "jump"} });
 		anims.SetCurrent("idle");
 
 
@@ -141,6 +141,8 @@ bool Player::Update(float dt)
 
 		}
 		Roll(dt, anim);
+		if (!rolling && !IsOnGround())
+			anim = "jump";
 		
 	}
 
@@ -211,15 +213,21 @@ bool Player::Update(float dt)
 
 	Vector2D mapSize =	Engine::GetInstance().map->GetMapSizeInPixels();
 	float camW = Engine::GetInstance().render->camera.w;
-	float limitLeft = camW / 4;
-	float limitRight = mapSize.getX() - camW * 3.0f / 4.0f;
+	float camH = Engine::GetInstance().render->camera.h;
 
-	if (position.getX() > limitLeft || position.getX() < limitRight)
-	{
-		Engine::GetInstance().render->camera.x =   camW/4.0f - position.getX();
 
-		Engine::GetInstance().render->camera.y = camW / 4.0f - position.getY();
-	}
+
+
+	float camX = camW / 4.0f - position.getX();
+	float camY = camH / 2.0f - position.getY();
+
+	if (camX > 0) camX = 0;
+	if (camX < camW - mapSize.getX()) camX = camW - mapSize.getX();
+	if (camY > 0) camY = 0;
+	if (camY < camH - mapSize.getY()) camY = camH - mapSize.getY();
+
+	Engine::GetInstance().render->camera.x = camX;
+	Engine::GetInstance().render->camera.y = camY;
 
 
 

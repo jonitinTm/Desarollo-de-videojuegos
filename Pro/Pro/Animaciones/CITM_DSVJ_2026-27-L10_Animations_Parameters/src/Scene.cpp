@@ -79,7 +79,9 @@ bool Scene::Update(float dt)
 
 	if(Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		Engine::GetInstance().render->camera.x += camSpeed * dt;
-
+	// Mostrar y esconder menu
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+		showHelp = !showHelp;
 	return true;
 }
 
@@ -151,6 +153,25 @@ bool Scene::PostUpdate()
 	}
 
 
+
+
+	if (showHelp)
+	{
+		SDL_Renderer* r = Engine::GetInstance().render->renderer;
+		SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
+		SDL_Rect panel = { 20, 50, 420, 150 };
+		Engine::GetInstance().render->DrawRectangle(panel, 0, 0, 0, 180, true, false);
+		SDL_SetRenderScale(r, 2.0f, 2.0f);
+		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+		SDL_RenderDebugText(r, 15.0f, 30.0f, "DEBUG KEYS");
+		SDL_RenderDebugText(r, 15.0f, 40.0f, "H   Help on/off");
+		SDL_RenderDebugText(r, 15.0f, 50.0f, "F9  Show colliders");
+		SDL_RenderDebugText(r, 15.0f, 60.0f, "F10 God mode");
+		SDL_RenderDebugText(r, 15.0f, 70.0f, "F11 30 fps cap");
+		SDL_SetRenderScale(r, 1.0f, 1.0f);
+	}
+
+
 	if (player->godMode)
 	{
 		SDL_Renderer* r = Engine::GetInstance().render->renderer;
@@ -188,6 +209,20 @@ bool Scene::PostUpdate()
 
 	return ret;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Called before quitting
 bool Scene::CleanUp()
