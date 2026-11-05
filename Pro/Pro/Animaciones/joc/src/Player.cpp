@@ -54,6 +54,7 @@ bool Player::Start()
 
 	texW = parameters.child("frame").attribute("width").as_int();
 	texH = parameters.child("frame").attribute("height").as_int();
+	speed = parameters.child("movement").attribute("speed").as_float(speed);
 	jumpSpeed = parameters.child("movement").attribute("jump").as_float();
 
 	// L10: TODO 5: Load this entity's animations from a TSX and set the current animation to "idle".

@@ -212,11 +212,22 @@ void Engine::PrepareUpdate()
 void Engine::FinishUpdate()
 {
 
-    // F11: enable / disable the 30 fps cap
+    // F11 activar desactivar cap
     if (input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
         frameCap30 = !frameCap30;
         targetFrameRate = frameCap30 ? 30.0f : configFrameRate;
     }
+
+
+    //Tecla F8 para Vsync
+
+    if (input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
+        render->ToggleVsync();
+
+
+
+
+
 
 
     // L03: TODO 1: Cap the framerate of the gameloop using maxFrameDuration.

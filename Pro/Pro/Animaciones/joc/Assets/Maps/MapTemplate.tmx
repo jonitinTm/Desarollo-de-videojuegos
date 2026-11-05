@@ -9456,9 +9456,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
    <tile gid="117"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -9565,9 +9565,9 @@
    <tile gid="369"/>
    <tile gid="369"/>
    <tile gid="369"/>
-   <tile gid="369"/>
-   <tile gid="369"/>
    <tile gid="117"/>
+   <tile gid="369"/>
+   <tile gid="369"/>
    <tile gid="369"/>
    <tile gid="369"/>
    <tile gid="369"/>
@@ -15895,9 +15895,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
    <tile gid="49"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -16004,9 +16004,9 @@
    <tile gid="50"/>
    <tile gid="50"/>
    <tile gid="50"/>
-   <tile gid="50"/>
-   <tile gid="50"/>
    <tile gid="49"/>
+   <tile gid="50"/>
+   <tile gid="50"/>
    <tile gid="50"/>
    <tile gid="50"/>
    <tile gid="50"/>
@@ -19448,7 +19448,7 @@
   </data>
  </layer>
  <objectgroup id="9" name="Spawn">
-  <object id="15" x="184" y="1640">
+  <object id="15" x="192" y="1622.67">
    <point/>
   </object>
  </objectgroup>

@@ -34,11 +34,13 @@ bool Render::Awake()
 
 	// L05: TODO 5: Load the vsync setting from config.xml
 	pugi::xml_attribute vsyncAttr = configParameters.child("vsync").attribute("value");
+	
 	if (vsyncAttr.empty()) {
 		LOG("config.xml: missing render/vsync@value, using default false");
+	}
+	else {
 		vsync = vsyncAttr.as_bool();
 	}
-
 	// SDL3: no flags; create default renderer and set vsync separately
 	renderer = SDL_CreateRenderer(window, nullptr);
 
@@ -295,4 +297,14 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 	}
 
 	return ret;
+}
+
+//Vsync
+void Render::ToggleVsync()
+{
+	bool newState = !vsync;
+	if (SDL_SetRenderVSync(renderer, newState ? 1 : 0))
+		vsync = newState;
+	else
+		LOG("Could not change vsync: %s", SDL_GetError());
 }

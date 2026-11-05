@@ -39,8 +39,18 @@ public:
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 
-	//Booleana que se usara para el menu de capar fps
-	bool IsVsyncEnabled()const { return vsync; }
+	//Vsync configuration/menu
+
+	void ToggleVsync();
+	bool IsVsyncEnabled() const { return vsync; }
+
+
+
+
+
+
+
+
 
 public:
 

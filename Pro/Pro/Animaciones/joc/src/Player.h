@@ -91,7 +91,7 @@ private:
 	bool rolling = false;
 	float rollTimer = 0.0f;
 	float rollDuration = 0.5f;   // segundos que dura el roll
-	float rollSpeed = 12.0f;     // más alto = recorre más distancia
+	float rollSpeed = 9.0f;     // más alto = recorre más distancia
 	int facing = 1;
 
 	//N creacion de las funciones para la muerte instanteanea
