@@ -348,7 +348,7 @@ bool Player::Draw()
 
 
 
-	Engine::GetInstance().render->DrawTexture(texture, (int)position.getX() - texW / 2, (int)position.getY() - texH / 2, &currentFrame);
+	Engine::GetInstance().render->DrawTexture(texture, (int)position.getX() - texW / 2, (int)position.getY() - texH / 2, &currentFrame,facing);
 
 	return true;
 }
