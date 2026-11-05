@@ -45,7 +45,11 @@ bool Scene::Start()
 
 	// L06: TODO 7: Load the map through the map module
 	Engine::GetInstance().map->Load("Assets/Maps/", "MapTemplate.tmx");
-
+	
+	
+	//spawn
+	if (Engine::GetInstance().map->HasSpawnPoint())
+		player->SetSpawnPoint(Engine::GetInstance().map->GetSpawnPoint());
 	return true;
 }
 

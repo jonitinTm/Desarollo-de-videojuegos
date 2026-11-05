@@ -238,7 +238,14 @@ bool Player::Update(float dt)
 	return true;
 }
 
-
+//Spawn 
+void Player::SetSpawnPoint(Vector2D p)
+{
+	spawnPoint = p;
+	position = p;
+	if (pbody != nullptr)
+		pbody->SetPosition((int)p.getX() + texW / 2, (int)p.getY() + texH / 2);
+}
 
 
 void Player::PoderGod()

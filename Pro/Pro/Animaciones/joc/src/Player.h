@@ -36,7 +36,8 @@ public:
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
 	float jumpSpeed = 6.5f;
-
+	//Spawn
+	void SetSpawnPoint(Vector2D p);
 public:
 
 	// Declare player parameters
